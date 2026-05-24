@@ -1,57 +1,38 @@
-package com.randomlootpvp;
+<?xml version="1.0" encoding="UTF-8"?>
 
-import com.randomlootpvp.commands.RandomLootCommand;
-import com.randomlootpvp.listeners.ChestBreakListener;
-import com.randomlootpvp.listeners.ChestInteractListener;
-import com.randomlootpvp.manager.ChestManager;
-import com.randomlootpvp.manager.ConfigManager;
-import org.bukkit.plugin.java.JavaPlugin;
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-public class RandomLootPvP extends JavaPlugin {
+    <modelVersion>4.0.0</modelVersion>
 
-    private ChestManager chestManager;
-    private ConfigManager configManager;
+    <groupId>me.rishu</groupId>
+    <artifactId>lootbox</artifactId>
+    <version>1.0</version>
+    <packaging>jar</packaging>
 
-    @Override
-    public void onEnable() {
-        // Save default config
-        saveDefaultConfig();
+    <name>lootbox</name>
 
-        // Load config wrapper
-        this.configManager = new ConfigManager(this);
+    <properties>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 
-        // Initialize chest manager
-        this.chestManager = new ChestManager(this);
+    <repositories>
+        <repository>
+            <id>papermc-repo</id>
+            <url>https://repo.papermc.io/repository/maven-public/</url>
+        </repository>
+    </repositories>
 
-        // Register listeners
-        getServer().getPluginManager().registerEvents(new ChestBreakListener(this), this);
-        getServer().getPluginManager().registerEvents(new ChestInteractListener(this), this);
+    <dependencies>
+        <dependency>
+            <groupId>io.papermc.paper</groupId>
+            <artifactId>paper-api</artifactId>
+            <version>1.21.1-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
 
-        // Register commands
-        RandomLootCommand cmd = new RandomLootCommand(this);
-        getCommand("randomloot").setExecutor(cmd);
-        getCommand("randomloot").setTabCompleter(cmd);
-
-        // Start scheduled tasks
-        chestManager.start();
-
-        getLogger().info("RandomLootPvP v2.0 enabled — chunk-safe mode active.");
-        getLogger().info("Spawn interval: " + configManager.getSpawnIntervalSeconds() + "s | Max chests: " + configManager.getMaxChests());
-    }
-
-    @Override
-    public void onDisable() {
-        if (chestManager != null) {
-            chestManager.shutdown();
-        }
-        getLogger().info("RandomLootPvP disabled. Chests cleaned up.");
-    }
-
-    public ChestManager getChestManager() {
-        return chestManager;
-    }
-
-    public ConfigManager getConfigManager() {
-        return configManager;
-    }
-}
+</project>
